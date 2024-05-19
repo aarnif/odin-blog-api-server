@@ -1,7 +1,9 @@
 import indexRouter from "./routes/index.js";
 import apiRouter from "./routes/api.js";
 import errorHandler from "./errorHandler.js";
-import "dotenv/config";
+import config from "./utils/config.js";
+import passportConfig from "./passport.config.js";
+
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -10,17 +12,12 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import morgan from "morgan";
 
-import { passportConfig } from "./passport.config.js";
-
 passportConfig(passport);
 
 const app = express();
 
-const PORT = process.env.PORT;
-
-// Set up mongoose connection
 mongoose.set("strictQuery", false);
-const mongoDB = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@cluster0.byjz9pz.mongodb.net/posts?retryWrites=true&w=majority`;
+const mongoDB = `mongodb+srv://${config.DATABASE_USERNAME}:${config.DATABASE_PASSWORD}@cluster0.byjz9pz.mongodb.net/posts?retryWrites=true&w=majority`;
 
 main().catch((err) => console.log(err));
 async function main() {
@@ -39,13 +36,13 @@ app.use(
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: config.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
 );
 
-app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(cookieParser(config.SESSION_SECRET));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -57,10 +54,6 @@ app.use(function (req, res, next) {
 app.use("/", indexRouter);
 app.use("/api", apiRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 app.use(errorHandler);
 
-app.listen(PORT, console.log(`Listening on port ${PORT}`));
+export default app;

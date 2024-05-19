@@ -9,9 +9,8 @@ const commentSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-// Virtual for user's URL
 commentSchema.virtual("url").get(function () {
-  // We don't use an arrow function as we'll need the this object
+  // Don't use an arrow function because of this
   return `/api/posts/:postId/comments/${this._id}`;
 });
 

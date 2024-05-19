@@ -5,7 +5,7 @@ import User from "./models/user.js";
 
 const LocalStrategy = Strategy.Strategy;
 
-export const passportConfig = (passport) => {
+const passportConfig = (passport) => {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       console.log("Try logging in...");
@@ -44,3 +44,5 @@ export const passportConfig = (passport) => {
     }
   });
 };
+
+export default passportConfig;

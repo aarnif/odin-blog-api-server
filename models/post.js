@@ -12,9 +12,8 @@ const postSchema = new Schema({
   isPublished: Boolean,
 });
 
-// Virtual for user's URL
 postSchema.virtual("url").get(function () {
-  // We don't use an arrow function as we'll need the this object
+  // Don't use an arrow function because of this
   return `api/posts/${this._id}`;
 });
 
