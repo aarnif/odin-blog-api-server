@@ -1,3 +1,6 @@
+import indexRouter from "./routes/index.js";
+import apiRouter from "./routes/api.js";
+import errorHandler from "./errorHandler.js";
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
@@ -5,8 +8,7 @@ import mongoose from "mongoose";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-import indexRouter from "./routes/index.js";
-import apiRouter from "./routes/api.js";
+import morgan from "morgan";
 
 import { passportConfig } from "./passport.config.js";
 
@@ -25,6 +27,7 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
@@ -57,5 +60,7 @@ app.use("/api", apiRouter);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.use(errorHandler);
 
 app.listen(PORT, console.log(`Listening on port ${PORT}`));
